@@ -1,0 +1,116 @@
+/* ─── KEYFRAMES ──────────────────────────────────────────────────────────── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes lineGrow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes lineGrowY {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+@keyframes barFill {
+  from { width: 0; }
+  to   { width: var(--bar-w, 0%); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; }
+  50%       { opacity: 1; }
+}
+
+@keyframes subtleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes borderPulse {
+  0%, 100% { border-color: var(--line); }
+  50%       { border-color: var(--lime30); }
+}
+
+@keyframes bgPan {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 56px 56px; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ─── UTILITY CLASSES ────────────────────────────────────────────────────── */
+
+/* Staggered page entry */
+.anim-up         { animation: fadeUp var(--dur-base) var(--ease-spring) both; }
+.anim-up.d1      { animation-delay: 60ms; }
+.anim-up.d2      { animation-delay: 120ms; }
+.anim-up.d3      { animation-delay: 180ms; }
+.anim-up.d4      { animation-delay: 240ms; }
+.anim-up.d5      { animation-delay: 300ms; }
+
+.anim-in         { animation: fadeIn  var(--dur-base) var(--ease-out) both; }
+.anim-left       { animation: slideInLeft  var(--dur-base) var(--ease-spring) both; }
+.anim-right      { animation: slideInRight var(--dur-base) var(--ease-spring) both; }
+
+/* Score count animation */
+.anim-count      { animation: countUp var(--dur-slow) var(--ease-spring) both; }
+
+/* Animated score bar — set --bar-w on the element */
+.bar-animated    { animation: barFill 1s var(--ease-spring) both; }
+
+/* Loader dots */
+.dot-loader { display: flex; gap: 5px; align-items: center; }
+.dot-loader span {
+  width: 5px; height: 5px; background: var(--lime);
+  display: block;
+  animation: pulse 0.9s ease-in-out infinite;
+}
+.dot-loader span:nth-child(2) { animation-delay: 0.15s; }
+.dot-loader span:nth-child(3) { animation-delay: 0.30s; }
+
+/* Line reveal */
+.line-reveal {
+  animation: lineGrow var(--dur-base) var(--ease-spring) both;
+  transform-origin: left;
+}
+
+/* Hover lift — applied via JS or class toggle */
+.lift {
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out);
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* Click press */
+.press:active { transform: scale(0.975); }

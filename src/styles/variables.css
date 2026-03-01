@@ -1,0 +1,39 @@
+/* ─── DESIGN TOKENS ──────────────────────────────────────────────────────── */
+:root {
+  /* Background */
+  --bg:     #070707;
+  --bg1:    #0e0e0e;
+  --bg2:    #141414;
+
+  /* Borders */
+  --line:   #1a1a1a;
+  --line2:  #252525;
+
+  /* Accent */
+  --lime:   #c2f135;
+  --lime8:  rgba(194, 241, 53, 0.07);
+  --lime15: rgba(194, 241, 53, 0.15);
+  --lime30: rgba(194, 241, 53, 0.28);
+
+  /* Text */
+  --text:   #dedede;
+  --dim:    #4a4a4a;
+  --dim2:   #2a2a2a;
+
+  /* Status colours */
+  --red:    #ff4d6d;
+  --teal:   #5ef0c8;
+  --amber:  #ffb347;
+  --blue:   #56cffc;
+
+  /* Easing */
+  --ease-spring:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+
+  /* Timing */
+  --dur-fast:   180ms;
+  --dur-base:   300ms;
+  --dur-slow:   500ms;
+  --dur-slower: 700ms;
+}
