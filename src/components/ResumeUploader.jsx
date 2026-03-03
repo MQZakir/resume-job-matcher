@@ -1,88 +1,79 @@
-/**
- * ResumeUploader.jsx
- * ──────────────────
- * Drop zone + file picker for PDF/DOCX resumes.
- * After parse it shows a structured preview of the extracted text.
- *
- * Props:
- *   onParsed(text: string)  — called with the raw extracted text
- *   value(string)           — current resume text (shows loaded state)
- *   label(string)           — heading override, default "YOUR RESUME"
- *   accentColor(string)     — left-border accent, default 'var(--lime30)'
- */
+import { useState, useRef, useCallback } from "react"
+import { parseResume } from "../utils/parseResume"
 
-import { useState, useRef, useCallback } from 'react'
-import { parseResume } from '../utils/parseResume'
+const SECTION_META = {
+  contact:        { color: "var(--blue)",  icon: "◉" },
+  summary:        { color: "var(--lime)",  icon: "◈" },
+  experience:     { color: "var(--teal)",  icon: "◆" },
+  education:      { color: "var(--amber)", icon: "◆" },
+  skills:         { color: "var(--lime)",  icon: "◆" },
+  achievements:   { color: "var(--teal)",  icon: "◆" },
+  projects:       { color: "var(--blue)",  icon: "◆" },
+  certifications: { color: "var(--amber)", icon: "◆" },
+  publications:   { color: "var(--blue)",  icon: "◆" },
+  volunteering:   { color: "var(--teal)",  icon: "◆" },
+  languages:      { color: "var(--lime)",  icon: "◆" },
+  interests:      { color: "var(--dim)",   icon: "◇" },
+  references:     { color: "var(--dim)",   icon: "◇" },
+}
 
-const ACCEPTED = '.pdf,.docx,.doc'
+function getMeta(key) {
+  if (SECTION_META[key]) return SECTION_META[key]
+  return { color: "var(--blue)", icon: "◆" }
+}
 
-// ─── SECTION PREVIEW CARD ─────────────────────────────────────────────────────
-function SectionBlock({ title, content, color = 'var(--dim)', delay = '0ms' }) {
-  const [expanded, setExpanded] = useState(false)
-  if (!content) return null
-
-  const preview  = content.split('\n').slice(0, 3).join('\n')
-  const hasMore  = content.split('\n').length > 3
-  const shown    = expanded ? content : preview
-
+function SectionCard({ section, index }) {
+  const meta = getMeta(section.key)
+  const nonEmptyLines = section.lines.filter(l => l.trim())
   return (
-    <div
-      style={{
-        borderLeft: `2px solid ${color}`,
-        paddingLeft: 12,
-        marginBottom: 14,
-        animation: `fadeUp var(--dur-base) ${delay} var(--ease-spring) both`,
-      }}
-    >
-      <div style={{ fontSize: 9, letterSpacing: '.12em', color, textTransform: 'uppercase', marginBottom: 5 }}>
-        {title}
+    <div style={{
+      borderLeft: `3px solid ${meta.color}`,
+      background: "var(--bg)",
+      padding: "18px 20px",
+      animation: `fadeUp var(--dur-base) ${index * 45}ms var(--ease-spring) both`,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+        <span style={{ color: meta.color, fontSize: 13 }}>{meta.icon}</span>
+        <span style={{ fontSize: 11, letterSpacing: ".14em", color: meta.color, textTransform: "uppercase", fontWeight: 500 }}>
+          {section.label}
+        </span>
+        <span style={{ fontSize: 10, color: "var(--dim)", marginLeft: "auto" }}>
+          {nonEmptyLines.length} lines
+        </span>
       </div>
-      <p style={{ fontSize: 11, color: 'var(--dim)', lineHeight: 1.7, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-        {shown}
-      </p>
-      {hasMore && (
-        <button
-          onClick={() => setExpanded(e => !e)}
-          style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            fontSize: 9, color, letterSpacing: '.1em', marginTop: 5, padding: 0,
-            textTransform: 'uppercase',
-          }}
-        >
-          {expanded ? '▲ COLLAPSE' : '▼ SHOW MORE'}
-        </button>
-      )}
+      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 13, lineHeight: 1.85, color: "var(--text)" }}>
+        {section.lines.map((line, i) => (
+          line.trim()
+            ? <div key={i}>{line}</div>
+            : <div key={i} style={{ height: 10 }} />
+        ))}
+      </div>
     </div>
   )
 }
 
-// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
-export function ResumeUploader({
-  onParsed,
-  value = '',
-  label = 'YOUR RESUME',
-  accentColor = 'var(--lime30)',
-}) {
-  const [status, setStatus]     = useState('idle')   // idle | parsing | done | error
-  const [fileInfo, setFileInfo] = useState(null)      // { fileName, fileSize }
-  const [sections, setSections] = useState(null)      // parsed sections object
-  const [errMsg, setErrMsg]     = useState('')
+export function ResumeUploader({ onParsed, value = "", label = "YOUR RESUME", accentColor = "var(--lime30)" }) {
+  const [status,   setStatus]   = useState(value ? "done" : "idle")
+  const [fileInfo, setFileInfo] = useState(null)
+  const [sections, setSections] = useState(null)
+  const [stats,    setStats]    = useState(null)
+  const [errMsg,   setErrMsg]   = useState("")
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef(null)
 
   const process = useCallback(async (file) => {
-    if (!file) return
-    setStatus('parsing')
-    setErrMsg('')
+    setStatus("parsing")
+    setErrMsg("")
     try {
       const result = await parseResume(file)
-      setFileInfo({ fileName: result.fileName, fileSize: result.fileSize })
+      setFileInfo({ name: result.fileName, size: result.fileSize })
       setSections(result.sections)
+      setStats({ words: result.wordCount, chars: result.charCount, secs: result.sections.length })
       onParsed(result.text)
-      setStatus('done')
+      setStatus("done")
     } catch (e) {
-      setErrMsg(e.message || 'Parse failed. Please try a different file.')
-      setStatus('error')
+      setErrMsg(e.message || "Parse failed. Try a different file.")
+      setStatus("error")
     }
   }, [onParsed])
 
@@ -96,155 +87,125 @@ export function ResumeUploader({
   const onInputChange = (e) => {
     const file = e.target.files?.[0]
     if (file) process(file)
-    e.target.value = ''
+    e.target.value = ""
   }
 
   const reset = () => {
-    setStatus('idle')
-    setFileInfo(null)
-    setSections(null)
-    setErrMsg('')
-    onParsed('')
+    setStatus("idle"); setFileInfo(null); setSections(null)
+    setStats(null); setErrMsg("")
+    onParsed("")
   }
 
-  const SECTION_DEFS = [
-    { key: 'contact',      title: 'Contact Info',   color: 'var(--lime)',  delay: '0ms'   },
-    { key: 'summary',      title: 'Summary',        color: 'var(--teal)', delay: '40ms'  },
-    { key: 'experience',   title: 'Experience',     color: 'var(--blue)', delay: '80ms'  },
-    { key: 'education',    title: 'Education',      color: 'var(--amber)',delay: '120ms' },
-    { key: 'skills',       title: 'Skills',         color: 'var(--lime)', delay: '160ms' },
-    { key: 'achievements', title: 'Achievements',   color: 'var(--teal)', delay: '200ms' },
-  ]
+  if (status === "parsing") {
+    return (
+      <div style={{ border: "1px solid var(--line)", background: "var(--bg1)", padding: "48px 24px", textAlign: "center" }}>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 48, color: "var(--lime)", animation: "pulse 1.5s ease-in-out infinite", marginBottom: 18 }}>
+          READING FILE
+        </div>
+        <div className="dot-loader" style={{ justifyContent: "center", marginBottom: 12 }}>
+          <span /><span /><span />
+        </div>
+        <div style={{ fontSize: 11, color: "var(--dim)", letterSpacing: ".1em" }}>EXTRACTING ALL TEXT</div>
+      </div>
+    )
+  }
 
-  // ── IDLE / ERROR drop zone ────────────────────────────────────────────────
-  if (status === 'idle' || status === 'error') {
+  if (status === "done" && sections) {
     return (
       <div>
-        <div style={{ fontSize: 9, letterSpacing: '.12em', color: 'var(--dim)', marginBottom: 10 }}>
-          {label}
-        </div>
-
-        {/* Drop zone */}
-        <div
-          onClick={() => inputRef.current?.click()}
-          onDragOver={e => { e.preventDefault(); setDragging(true) }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={onDrop}
-          style={{
-            border: `1px dashed ${dragging ? 'var(--lime)' : 'var(--line2)'}`,
-            borderLeft: `3px solid ${dragging ? 'var(--lime)' : accentColor}`,
-            background: dragging ? 'var(--lime8)' : 'var(--bg)',
-            padding: 'clamp(28px, 5vw, 52px) 24px',
-            cursor: 'pointer',
-            textAlign: 'center',
-            transition: 'all var(--dur-base) var(--ease-out)',
-            position: 'relative',
-          }}
-        >
-          <input
-            ref={inputRef}
-            type="file"
-            accept={ACCEPTED}
-            onChange={onInputChange}
-            style={{ display: 'none' }}
-          />
-
-          {/* Icon */}
-          <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 'clamp(36px, 6vw, 56px)',
-            color: dragging ? 'var(--lime)' : 'var(--dim2)',
-            lineHeight: 1,
-            marginBottom: 14,
-            transition: 'color var(--dur-fast) var(--ease-out)',
-          }}>
-            ⊡
-          </div>
-
-          <div style={{ fontSize: 13, color: dragging ? 'var(--lime)' : 'var(--text)', marginBottom: 6, transition: 'color var(--dur-fast) var(--ease-out)' }}>
-            {dragging ? 'Drop it here' : 'Drop your resume or click to browse'}
-          </div>
-          <div style={{ fontSize: 10, color: 'var(--dim)', letterSpacing: '.08em' }}>
-            PDF · DOCX · DOC
-          </div>
-
-          {status === 'error' && (
-            <div style={{ marginTop: 16, fontSize: 11, color: 'var(--red)', letterSpacing: '.04em' }}>
-              ✕ {errMsg}
-            </div>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap",
+          padding: "14px 18px",
+          background: "var(--bg1)",
+          border: "1px solid var(--line)",
+          borderLeft: "3px solid var(--teal)",
+          marginBottom: 1,
+        }}>
+          <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 18, color: "var(--teal)" }}>◈</span>
+          <span style={{ fontSize: 13, color: "var(--text)", flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {fileInfo?.name}
+          </span>
+          <span style={{ fontSize: 10, color: "var(--dim)" }}>{fileInfo?.size}</span>
+          {stats && (
+            <>
+              <span style={{ width: 1, height: 14, background: "var(--line)", flexShrink: 0 }} />
+              <span style={{ fontSize: 10, color: "var(--lime)" }}>{stats.words.toLocaleString()} words</span>
+              <span style={{ fontSize: 10, color: "var(--dim)" }}>{stats.secs} sections</span>
+            </>
           )}
+          <button onClick={reset} className="btn-ghost" style={{ fontSize: 10, padding: "6px 14px", flexShrink: 0 }}>
+            ✕ REMOVE
+          </button>
+        </div>
+
+        <div style={{
+          padding: "10px 18px",
+          background: "var(--lime8)",
+          border: "1px solid var(--lime15)",
+          borderTop: "none",
+          marginBottom: 1,
+          fontSize: 11,
+          color: "var(--lime)",
+          letterSpacing: ".08em",
+        }}>
+          ◆ FULL RESUME PARSED — ALL TEXT BELOW IS SENT TO AI
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          {sections.map((section, i) => (
+            <SectionCard key={section.key + i} section={section} index={i} />
+          ))}
         </div>
       </div>
     )
   }
 
-  // ── PARSING ───────────────────────────────────────────────────────────────
-  if (status === 'parsing') {
-    return (
-      <div>
-        <div style={{ fontSize: 9, letterSpacing: '.12em', color: 'var(--dim)', marginBottom: 10 }}>{label}</div>
-        <div style={{ border: '1px solid var(--line)', background: 'var(--bg1)', padding: '32px 24px', textAlign: 'center' }}>
-          <div className="dot-loader" style={{ justifyContent: 'center', marginBottom: 14 }}>
-            <span /><span /><span />
-          </div>
-          <div style={{ fontSize: 10, color: 'var(--dim)', letterSpacing: '.12em' }}>PARSING FILE…</div>
-        </div>
-      </div>
-    )
-  }
-
-  // ── DONE — preview ────────────────────────────────────────────────────────
   return (
     <div>
-      {/* File info strip */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-        <div style={{ fontSize: 9, letterSpacing: '.12em', color: 'var(--dim)', flex: 1 }}>{label}</div>
-        <div style={{ fontSize: 9, color: 'var(--teal)', letterSpacing: '.08em' }}>
-          ◆ {fileInfo?.fileName}
-        </div>
-        <div style={{ fontSize: 9, color: 'var(--dim)' }}>{fileInfo?.fileSize}</div>
-        <button
-          onClick={reset}
-          style={{
-            background: 'none', border: '1px solid var(--line2)',
-            color: 'var(--dim)', cursor: 'pointer', fontSize: 9,
-            letterSpacing: '.1em', padding: '3px 9px',
-            transition: 'all var(--dur-fast) var(--ease-out)',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.color = 'var(--red)'; e.currentTarget.style.borderColor = 'var(--red)' }}
-          onMouseLeave={e => { e.currentTarget.style.color = 'var(--dim)'; e.currentTarget.style.borderColor = 'var(--line2)' }}
-        >
-          ✕ REMOVE
-        </button>
+      <div style={{ fontSize: 11, letterSpacing: ".12em", color: "var(--dim)", marginBottom: 12, textTransform: "uppercase" }}>
+        {label}
       </div>
-
-      {/* Parsed sections preview */}
-      <div style={{
-        border: '1px solid var(--line)',
-        borderLeft: `3px solid ${accentColor.replace('30', '')}`,
-        background: 'var(--bg1)',
-        padding: 'clamp(14px, 2vw, 22px)',
-        maxHeight: 'clamp(240px, 32vh, 400px)',
-        overflowY: 'auto',
-      }}>
-        <div style={{ fontSize: 9, letterSpacing: '.12em', color: 'var(--lime)', marginBottom: 14 }}>
-          ◆ PARSED SUCCESSFULLY — REVIEW BELOW
+      <div
+        onClick={() => inputRef.current?.click()}
+        onDragOver={e => { e.preventDefault(); setDragging(true) }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={onDrop}
+        style={{
+          border: `1px dashed ${dragging ? "var(--lime)" : status === "error" ? "var(--red)" : "var(--line2)"}`,
+          borderLeft: `3px solid ${dragging ? "var(--lime)" : status === "error" ? "var(--red)" : accentColor}`,
+          background: dragging ? "var(--lime8)" : "var(--bg)",
+          padding: "clamp(36px, 6vw, 64px) 24px",
+          cursor: "pointer",
+          textAlign: "center",
+          transition: "all var(--dur-base) var(--ease-out)",
+        }}
+      >
+        <input ref={inputRef} type="file" accept=".pdf,.docx,.doc" onChange={onInputChange} style={{ display: "none" }} />
+        <div style={{
+          fontFamily: "'Bebas Neue', sans-serif",
+          fontSize: "clamp(48px, 7vw, 72px)",
+          color: dragging ? "var(--lime)" : "var(--dim2)",
+          lineHeight: 1,
+          marginBottom: 18,
+          transition: "color var(--dur-fast) var(--ease-out)",
+        }}>
+          ⊡
         </div>
-
-        {SECTION_DEFS.map(def => (
-          <SectionBlock
-            key={def.key}
-            title={def.title}
-            content={sections?.[def.key]}
-            color={def.color}
-            delay={def.delay}
-          />
-        ))}
-
-        {/* Any leftover */}
-        {sections?.other && (
-          <SectionBlock title="Other" content={sections.other} color="var(--dim)" delay="240ms" />
+        <div style={{ fontSize: 16, color: dragging ? "var(--lime)" : "var(--text)", marginBottom: 8, letterSpacing: ".04em", transition: "color var(--dur-fast) var(--ease-out)" }}>
+          {dragging ? "Drop it here" : "Drop your resume or click to browse"}
+        </div>
+        {status === "error" ? (
+          <div style={{ fontSize: 13, color: "var(--red)", marginTop: 10 }}>✕ {errMsg}</div>
+        ) : (
+          <div style={{ fontSize: 12, color: "var(--dim)", letterSpacing: ".06em" }}>
+            PDF · DOCX · DOC — complete text extraction
+          </div>
         )}
+        <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 18 }}>
+          {["PDF", "DOCX", "DOC"].map(t => (
+            <span key={t} style={{ fontSize: 10, letterSpacing: ".1em", padding: "4px 12px", border: "1px solid var(--line2)", color: "var(--dim)" }}>{t}</span>
+          ))}
+        </div>
       </div>
     </div>
   )

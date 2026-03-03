@@ -30,10 +30,10 @@ export default function App() {
     <>
       <Background />
 
-      {/* Floating nav sits outside the scroll container — fixed positioning */}
+      {/* Floating nav — fixed, sits above everything */}
       <TopNav active={tab} setActive={setTab} stats={stats} />
 
-      {/* Full-height scroll container with top padding to clear the floating nav */}
+      {/* Full-height scroll container with top padding to clear floating nav */}
       <div
         key={tab}
         style={{
@@ -41,7 +41,7 @@ export default function App() {
           overflowY: 'auto',
           position: 'relative',
           zIndex: 1,
-          paddingTop: 72,   /* floating nav height (46px) + gap (26px) */
+          paddingTop: 90,   /* nav height (46px) + top offset (14px) + gap (16px) */
         }}
       >
         {pages[tab]}

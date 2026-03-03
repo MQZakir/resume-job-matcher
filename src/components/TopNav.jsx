@@ -45,7 +45,7 @@ export function TopNav({ active, setActive, stats }) {
     <nav className="top-nav">
       {/* Logo */}
       <div className="nav-logo">
-        <span className="nav-logo-text">RF</span>
+        <span className="nav-logo-text">REZIQ</span>
       </div>
 
       {/* Nav items — horizontally scrollable on small screens */}

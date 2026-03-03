@@ -14,7 +14,7 @@ body {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  padding: clamp(24px, 3.5vw, 48px) clamp(20px, 5vw, 60px);
+  padding: clamp(32px, 4.5vw, 64px) clamp(28px, 5.5vw, 80px);
 }
 
 /* ─── RESPONSIVE GRID SYSTEM ─────────────────────────────────────────────── */
@@ -110,7 +110,7 @@ body {
 .cell {
   background: var(--bg1);
   border: 1px solid var(--line);
-  padding: 18px 20px;
+  padding: 22px 26px;
   transition:
     background var(--dur-fast) var(--ease-out),
     border-color var(--dur-fast) var(--ease-out);
@@ -126,11 +126,11 @@ body {
   background: var(--lime);
   color: #080808;
   font-family: 'DM Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 11px 22px;
+  padding: 14px 26px;
   border: none;
   cursor: pointer;
   display: inline-flex;
@@ -154,10 +154,10 @@ body {
   background: transparent;
   color: var(--text);
   font-family: 'DM Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 9px 18px;
+  padding: 11px 20px;
   border: 1px solid var(--line2);
   cursor: pointer;
   display: inline-flex;
@@ -180,11 +180,11 @@ input,
 textarea,
 select {
   font-family: 'DM Mono', monospace;
-  font-size: 12px;
+  font-size: 14px;
   background: var(--bg);
   border: 1px solid var(--line2);
   color: var(--text);
-  padding: 11px 14px;
+  padding: 14px 16px;
   outline: none;
   width: 100%;
   transition:
@@ -197,12 +197,12 @@ select:focus {
   border-color: var(--lime30);
   box-shadow: 0 0 0 1px var(--lime15);
 }
-textarea { resize: vertical; min-height: 90px; line-height: 1.65; }
+textarea { resize: vertical; min-height: 120px; line-height: 1.7; }
 select option { background: var(--bg1); }
 
 input[type='range'] {
   -webkit-appearance: none;
-  height: 2px;
+  height: 3px;
   background: var(--line2);
   border: none;
   padding: 0;
@@ -238,9 +238,9 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 
 /* ─── CHIPS / TAGS ───────────────────────────────────────────────────────── */
 .chip {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.06em;
-  padding: 3px 9px;
+  padding: 5px 12px;
   border: 1px solid;
   display: inline-block;
   margin-right: 6px;
@@ -330,7 +330,7 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
   z-index: 100;
 
   /* Pill shape */
-  height: 46px;
+  height: 56px;
   border-radius: 999px;
   display: flex;
   align-items: center;
@@ -347,7 +347,7 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
   animation: fadeUp var(--dur-slow) var(--ease-spring) both;
 
   /* Don't let it get too wide or too narrow */
-  min-width: min(680px, 94vw);
+  min-width: min(800px, 94vw);
   max-width: 94vw;
 }
 
@@ -362,7 +362,7 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 
 /* Logo pill */
 .nav-logo {
-  width: 44px; height: 100%;
+  width: 74px; height: 100%;
   display: flex; align-items: center; justify-content: center;
   border-right: 1px solid rgba(255,255,255,0.07);
   flex-shrink: 0;
@@ -371,7 +371,7 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 }
 .nav-logo-text {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 18px;
+  font-size: 21px;
   color: var(--lime);
   letter-spacing: 0.08em;
   transition: opacity var(--dur-fast) var(--ease-out);
@@ -391,8 +391,8 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 .nav-btn {
   background: transparent; border: none; cursor: pointer;
   font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 0 clamp(10px, 1.4vw, 18px); height: 100%;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0 clamp(12px, 1.6vw, 24px); height: 100%;
   position: relative; flex-shrink: 0;
   transition: color var(--dur-fast) var(--ease-out);
   white-space: nowrap;
@@ -424,15 +424,15 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   border-right: 1px solid rgba(255,255,255,0.05);
-  min-width: 44px; height: 100%;
+  min-width: 54px; height: 100%;
 }
 .nav-stat:last-child { border-right: none; padding-right: clamp(12px,1.5vw,18px); }
 .nav-stat-val {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 14px; color: var(--lime); line-height: 1;
+  font-size: 17px; color: var(--lime); line-height: 1;
   animation: countUp var(--dur-slow) var(--ease-spring) both;
 }
-.nav-stat-label { font-size: 7px; color: var(--dim); letter-spacing: 0.14em; margin-top: 2px; }
+.nav-stat-label { font-size: 10px; color: var(--dim); letter-spacing: 0.14em; margin-top: 2px; }
 
 @media (max-width: 640px) {
   .top-nav { min-width: 92vw; }
@@ -441,8 +441,179 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 }
 
 /* ─── RESUME UPLOADER ────────────────────────────────────────────────────── */
-/* Styles are mostly inline in the component, but scrollbar for preview: */
 
+/* Drop zone */
+.ru-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 220px;
+  border: 1px dashed var(--line2);
+  background: var(--bg1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    background   var(--dur-base) var(--ease-out);
+  user-select: none;
+  padding: 28px 20px;
+}
+.ru-zone::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, var(--lime8), transparent);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.ru-zone:hover { border-color: var(--lime30); background: var(--bg2); }
+.ru-zone:hover::before { opacity: 1; }
+.ru-zone.ru-drag { border-color: var(--lime); background: var(--lime8); border-style: solid; }
+.ru-zone.ru-drag::before { opacity: 1; }
+.ru-zone.ru-error { border-color: rgba(255,77,109,.4); }
+
+/* Upload icon */
+.ru-upload-icon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 44px;
+  line-height: 1;
+  transition: transform var(--dur-base) var(--ease-spring), color var(--dur-base) var(--ease-out);
+}
+.ru-zone:hover .ru-upload-icon { transform: scale(1.08) translateY(-2px); color: var(--lime) !important; }
+.ru-zone.ru-drag .ru-upload-icon { transform: scale(1.15); }
+
+.ru-upload-main {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--text);
+  text-transform: uppercase;
+  font-weight: 500;
+  position: relative;
+}
+.ru-upload-sub {
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+  position: relative;
+  text-align: center;
+  max-width: 240px;
+  line-height: 1.5;
+}
+.ru-file-types {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  position: relative;
+}
+.ru-ft-badge {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  padding: 2px 8px;
+  border: 1px solid var(--line2);
+  color: var(--dim);
+}
+
+/* Parsing spinner state */
+.ru-parsing {
+  cursor: default;
+  animation: borderPulse 1.6s ease-in-out infinite;
+}
+.ru-parse-icon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: var(--lime);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.ru-parse-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--lime);
+  text-transform: uppercase;
+}
+
+/* Parsed result view */
+.ru-parsed {
+  border: 1px solid var(--line);
+  background: var(--bg1);
+  animation: fadeUp var(--dur-base) var(--ease-spring) both;
+}
+
+.ru-file-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  gap: 10px;
+  background: var(--bg2);
+  flex-wrap: wrap;
+}
+.ru-file-icon {
+  font-size: 14px;
+  color: var(--lime);
+  flex-shrink: 0;
+}
+.ru-filename {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 260px;
+}
+.ru-badge {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  padding: 2px 7px;
+  background: var(--lime15);
+  color: var(--lime);
+  border: 1px solid var(--lime30);
+  flex-shrink: 0;
+}
+
+/* Sections preview */
+.ru-sections {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: max-height 0.5s var(--ease-spring);
+}
+.ru-sections.ru-expanded {
+  max-height: 600px;
+}
+.ru-section {
+  padding: 8px 12px;
+  transition: background var(--dur-fast) var(--ease-out);
+  animation: fadeUp var(--dur-base) var(--ease-spring) both;
+}
+.ru-section:hover { background: var(--bg2); }
+.ru-section-label {
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.ru-section-text {
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+.ru-expanded .ru-section-text {
+  display: block;
+  -webkit-line-clamp: unset;
+}
 
 /* ─── SECTION CONTAINER ──────────────────────────────────────────────────── */
 .section-wrap {
@@ -460,7 +631,7 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 }
 .loading-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(40px, 6vw, 72px);
+  font-size: clamp(52px, 7vw, 88px);
   color: var(--lime); letter-spacing: 0.1em;
   animation: pulse 1.8s ease-in-out infinite;
 }
@@ -512,7 +683,7 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 
 /* ─── SECTION TAB ────────────────────────────────────────────────────────── */
 .section-tab {
-  padding: 9px 12px; cursor: pointer; font-size: 11px;
+  padding: 13px 16px; cursor: pointer; font-size: 13px;
   border-left: 2px solid transparent;
   letter-spacing: 0.04em;
   transition:
@@ -531,7 +702,7 @@ input[type='range']:focus { box-shadow: none; border-color: transparent; }
 /* ─── HERO TITLE — fluid size ────────────────────────────────────────────── */
 .hero-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(52px, 8vw, 90px);
+  font-size: clamp(68px, 9.5vw, 112px);
   line-height: 0.9;
   letter-spacing: 0.01em;
 }
