@@ -1,6 +1,7 @@
 import { memo, useState } from 'react'
-import { useScramble } from '../hooks/useScramble'
-import { useCountUp }  from '../hooks/useCountUp'
+import { useScramble }  from '../hooks/useScramble'
+import { useCountUp }   from '../hooks/useCountUp'
+import { ReziqLogo }    from './ReziqLogo'
 
 const NAV_ITEMS = [
   { id: 'home',     label: 'OVERVIEW'   },
@@ -45,7 +46,7 @@ export function TopNav({ active, setActive, stats }) {
     <nav className="top-nav">
       {/* Logo */}
       <div className="nav-logo">
-        <span className="nav-logo-text">REZIQ</span>
+        <ReziqLogo size={30} />
       </div>
 
       {/* Nav items — horizontally scrollable on small screens */}
