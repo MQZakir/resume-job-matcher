@@ -38,16 +38,16 @@ export function Home({ onNavigate, resumeText, stats }) {
         </div>
 
         {/* Status strip */}
-        <div className="anim-up d1 rf-grid-4" style={{ marginBottom: 'clamp(20px,3vw,36px)' }}>
+        <div className="anim-up d1 rf-grid-2" style={{ marginBottom: 'clamp(20px,3vw,36px)' }}>
           {[
             { label: 'Resume Status',  val: resumeText ? 'LOADED' : 'NONE',                col: resumeText ? 'var(--teal)' : 'var(--red)'  },
             { label: 'ATS Score',      val: stats.atsScore ? `${stats.atsScore}/100` : '—', col: 'var(--lime)'  },
             { label: 'Jobs Matched',   val: stats.jobs,                                     col: 'var(--blue)'  },
             { label: 'Sections Fixed', val: stats.fixes,                                    col: 'var(--amber)' },
           ].map(s => (
-            <div key={s.label} className="cell" style={{ textAlign: 'center', padding: 'clamp(14px,2vw,22px)' }}>
-              <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(28px,4vw,48px)', color: s.col, lineHeight: 1 }}>{s.val}</div>
-              <div style={{ fontSize: 12, color: 'var(--dim)', letterSpacing: '.1em', marginTop: 6 }}>{s.label}</div>
+            <div key={s.label} className="cell" style={{ textAlign: 'center', padding: 'clamp(24px,4vw,52px) clamp(14px,2vw,22px)' }}>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(52px,8vw,96px)', color: s.col, lineHeight: 1 }}>{s.val}</div>
+              <div style={{ fontSize: 12, color: 'var(--dim)', letterSpacing: '.1em', marginTop: 8 }}>{s.label}</div>
             </div>
           ))}
         </div>
